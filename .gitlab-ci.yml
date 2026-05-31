@@ -46,4 +46,3 @@ deploy_dev:
         - apk add openssh-client-default=10.3p1
         - ssh-add $DEV_SERVER_SSH_KEY
         - ssh $DEV_SERVER echo "Hello world!"
-

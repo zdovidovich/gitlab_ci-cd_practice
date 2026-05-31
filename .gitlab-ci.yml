@@ -19,6 +19,8 @@ Dockerfile_lint:
 pytest:
     stage: tests
     image: python:3.14.5-alpine3.23
+    before_script:
+        - pip install --no-cache-dir -r requirements.txt
     script:
         - pytest
 

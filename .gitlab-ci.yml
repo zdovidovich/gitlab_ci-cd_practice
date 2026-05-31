@@ -34,7 +34,10 @@ build_image:
 scan_image:
     extends: .docker_login
     stage: scan_image
-    image: aquasec/trivy
+    image: 
+        name: aquasec/trivy
+        entrypoint:
+            - ""
     script:
         - trivy image -q --exit-code 1 $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 

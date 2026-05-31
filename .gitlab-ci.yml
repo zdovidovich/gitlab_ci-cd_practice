@@ -32,20 +32,17 @@ build_image:
         - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 scan_image:
-    extends: .docker_login
     stage: scan_image
     image: 
-        name: aquasec/trivy
-        entrypoint:
-            - ""
+        aquasec/trivy
     script:
         - trivy image -q --exit-code 1 $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 deploy_dev:
+    stage: deploy_dev
     needs: [build_image]
     rules:
         - if: $CI_COMMIT_BRANCH == "dev"
-    stage: deploy_dev
     image: alpine:3.22.4
     script:
         - apk add openssh-client-default=10.3p1

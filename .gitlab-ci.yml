@@ -6,6 +6,9 @@ stages:
     - deploy_dev
     - deploy_prod
 
+variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
 .docker_login:
     before_script:
         - echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
@@ -23,6 +26,12 @@ pytest:
         - pip install --no-cache-dir -r requirements.txt
     script:
         - pytest
+    cache:
+        key: 
+            files:
+                - requirements.txt
+        paths:
+        - .cache/pip
 
 build_image:
     extends: .docker_login

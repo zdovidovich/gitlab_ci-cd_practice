@@ -14,7 +14,7 @@ venv
 ENV
 *.egg-info
 
-# Тесты (не нужны в образе)
+# Тесты
 tests/
 .pytest_cache
 htmlcov
@@ -28,11 +28,11 @@ htmlcov
 .idea
 *.swp
 
-# Документация (опционально)
+# Документация
 *.md
 LICENSE
 docs/
 
-# CI/CD конфиги (не нужны в образе)
+# CI/CD конфиги
 .gitlab-ci.yml
 .github/

@@ -5,8 +5,7 @@ from fastapi.templating import Jinja2Templates
 from .database import Base, engine
 from .routers import api, web
 
-# Создаем таблицы в БД при старте (в проде так делать не стоит —
-# используй Alembic, но для учебного проекта ок)
+# Создаем таблицы в БД при старте
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Мои книги — BookShelf{% endblock %}
+
+{% block content %}
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ total }}</div>
+        <div class="stat-label">Всего книг</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ read_count }}</div>
+        <div class="stat-label">Прочитано</div>
+    </div>
+</div>
+
+<section class="add-book">
+    <h2>Добавить книгу</h2>
+    <form action="/app/add" method="POST" class="add-form">
+        <div class="form-group">
+            <input type="text" name="title" placeholder="Название книги" required>
+            <input type="text" name="author" placeholder="Автор" required>
+            <input type="number" name="year" placeholder="Год" min="1000" max="2100">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </div>
+    </form>
+</section>
+
+<section class="book-list">
+    <h2>Список книг</h2>
+    
+    {% if books %}
+        <div class="books-grid">
+            {% for book in books %}
+            <div class="book-card {% if book.is_read %}read{% endif %}">
+                <div class="book-info">
+                    <h3 class="book-title">{{ book.title }}</h3>
+                    <p class="book-author">{{ book.author }}</p>
+                    {% if book.year %}
+                    <p class="book-year">{{ book.year }} год</p>
+                    {% endif %}
+                    <span class="book-status">
+                        {% if book.is_read %}
+                            ✓ Прочитано
+                        {% else %}
+                            ○ Не прочитано
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="book-actions">
+                    <form action="/app/toggle/{{ book.id }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-small">
+                            {% if book.is_read %}Отменить{% else %}Прочитал{% endif %}
+                        </button>
+                    </form>
+                    <form action="/app/delete/{{ book.id }}" method="POST" style="display: inline;" 
+                          onsubmit="return confirm('Удалить книгу?')">
+                        <button type="submit" class="btn btn-small btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>📖 У вас пока нет книг. Добавьте первую!</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

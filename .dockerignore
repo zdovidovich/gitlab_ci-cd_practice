@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+venv
+.venv
+ENV
+*.egg-info
+
+# Тесты (не нужны в образе)
+tests/
+.pytest_cache
+htmlcov
+.coverage
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode
+.idea
+*.swp
+
+# Документация (опционально)
+*.md
+LICENSE
+docs/
+
+# CI/CD конфиги (не нужны в образе)
+.gitlab-ci.yml
+.github/

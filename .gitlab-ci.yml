@@ -66,7 +66,11 @@ deploy_dev:
     script:
         - chmod 0400 $DEV_SERVER_SSH_KEY && ssh-add $DEV_SERVER_SSH_KEY
         - ssh-keyscan -H $DEV_SERVER >> ~/.ssh/known_hosts
-        - ssh $DEV_SERVER_USER@$DEV_SERVER echo "Hello world!"
+        - ssh $DEV_SERVER_USER@$DEV_SERVER "
+            echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin && 
+            docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA && 
+            docker stop server 2>/dev/null ;
+            docker run -p 80:8000 -d --name --rm server $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
 
 deploy_prod:
     stage: deploy_prod
@@ -78,4 +82,7 @@ deploy_prod:
     script:
         - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
         - ssh-keyscan -H $PROD_SERVER >> ~/.ssh/known_hosts
-        - ssh $PROD_SERVER_USER@$PROD_SERVER "echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin && docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA && docker stop server && docker run -p 80:8000 -d --name server $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+        - ssh $PROD_SERVER_USER@$PROD_SERVER "
+          echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin && 
+          docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA && 
+          docker run -p 80:8000 -d --name server_$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"

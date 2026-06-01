@@ -65,7 +65,7 @@ deploy_dev:
     image: alpine:3.22.4
     script:
         - chmod 0400 $DEV_SERVER_SSH_KEY && ssh-add $DEV_SERVER_SSH_KEY
-        - ssh-keyscan $DEV_SERVER
+        - ssh-keyscan -H $DEV_SERVER >> ~/.ssh/known_hosts
         - ssh $DEV_SERVER_USER@$DEV_SERVER echo "Hello world!"
 
 deploy_prod:
@@ -77,5 +77,5 @@ deploy_prod:
     image: alpine:3.22.4
     script:
         - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
-        - ssh-keyscan $PROD_SERVER
+        - ssh-keyscan -H $PROD_SERVER >> ~/.ssh/known_hosts
         - ssh $PROD_SERVER_USER@$PROD_SERVER echo "Hello world!"

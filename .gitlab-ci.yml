@@ -51,7 +51,7 @@ scan_image:
 
 .deploy:
     before_script:
-        - apk add openssh-client-default=10.3p1
+        - apk add openssh-client-default=10.0_p1-r10
         - eval $(ssh-agent -s)
         - mkdir -p ~/.ssh
         - chmod 700 ~/.ssh

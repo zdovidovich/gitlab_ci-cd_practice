@@ -64,7 +64,7 @@ deploy_prod:
     stage: deploy_prod
     needs: [build_image]
     rules:
-        - if: $CI_COMMIT_BRANCH == "prod"
+        - if: $CI_COMMIT_BRANCH == "main"
     image: alpine:3.22.4
     script:
         - apk add openssh-client-default=10.3p1

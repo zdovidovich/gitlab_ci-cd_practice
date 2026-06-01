@@ -67,6 +67,6 @@ deploy_prod:
         - if: $CI_COMMIT_BRANCH == "main"
     image: alpine:3.22.4
     script:
-        - apk add openssh-client-default=10.3p1
+        - apk add openssh-client-default=10.0_p1-r10
         - ssh-add $PROD_SERVER_SSH_KEY
         - ssh $PROD_SERVER echo "Hello world!"

@@ -51,7 +51,7 @@ scan_image:
 
 deploy_dev:
     stage: deploy_dev
-#    needs: [build_image]
+    needs: [build_image]
     rules:
         - if: $CI_COMMIT_BRANCH == "dev"
     image: alpine:3.22.4
@@ -60,3 +60,13 @@ deploy_dev:
         - ssh-add $DEV_SERVER_SSH_KEY
         - ssh $DEV_SERVER echo "Hello world!"
 
+deploy_prod:
+    stage: deploy_prod
+    needs: [build_image]
+    rules:
+        - if: $CI_COMMIT_BRANCH == "prod"
+    image: alpine:3.22.4
+    script:
+        - apk add openssh-client-default=10.3p1
+        - ssh-add $PROD_SERVER_SSH_KEY
+        - ssh $PROD_SERVER echo "Hello world!"

@@ -57,6 +57,7 @@ deploy_dev:
     image: alpine:3.22.4
     script:
         - apk add openssh-client-default=10.3p1
+        - eval $(ssh-agent -s)
         - ssh-add $DEV_SERVER_SSH_KEY
         - ssh $DEV_SERVER echo "Hello world!"
 
@@ -68,5 +69,6 @@ deploy_prod:
     image: alpine:3.22.4
     script:
         - apk add openssh-client-default=10.0_p1-r10
+        - eval $(ssh-agent -s)
         - ssh-add $PROD_SERVER_SSH_KEY
         - ssh $PROD_SERVER echo "Hello world!"

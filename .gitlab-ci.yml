@@ -94,3 +94,4 @@ deploy_prod:
           docker stop server 2>/dev/null ;
           docker rm server 2>/dev/null ;
           docker run -p 80:8000 -d --name server $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+    when: manual

@@ -10,6 +10,7 @@ image: debian:bookworm-slim
 
 variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    DOCKER_TLS_CERTDIR: "/certs"
 
 .docker_login:
     before_script:
@@ -38,6 +39,9 @@ pytest:
 build_image:
     extends: .docker_login
     stage: build
+    image: docker:29.5.2-cli
+    services:
+        - docker:29.5.2-dind
     script:
         - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
         - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA

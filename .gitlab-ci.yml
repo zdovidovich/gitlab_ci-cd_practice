@@ -51,7 +51,7 @@ scan_image:
 
 deploy_dev:
     stage: deploy_dev
-    needs: [build_image]
+#    needs: [build_image]
     rules:
         - if: $CI_COMMIT_BRANCH == "dev"
     image: alpine:3.22.4

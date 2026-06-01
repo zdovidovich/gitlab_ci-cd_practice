@@ -78,4 +78,4 @@ deploy_prod:
     script:
         - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
         - ssh-keyscan -H $PROD_SERVER >> ~/.ssh/known_hosts
-        - ssh $PROD_SERVER_USER@$PROD_SERVER echo "Hello world!"
+        - ssh $PROD_SERVER_USER@$PROD_SERVER echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin && docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA && docker run -p 80:8000 --name server $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA

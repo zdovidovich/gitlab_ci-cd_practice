@@ -23,7 +23,7 @@ pytest:
     stage: tests
     image: python:3.14.5-alpine3.23
     before_script:
-        - pip install --no-cache-dir -r requirements.txt
+        - pip install -r requirements.txt
     script:
         - pytest
     cache:
@@ -58,7 +58,7 @@ deploy_dev:
     script:
         - apk add openssh-client-default=10.3p1
         - eval $(ssh-agent -s)
-        - ssh-add $DEV_SERVER_SSH_KEY
+        - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
         - ssh $DEV_SERVER echo "Hello world!"
 
 deploy_prod:
@@ -70,5 +70,5 @@ deploy_prod:
     script:
         - apk add openssh-client-default=10.0_p1-r10
         - eval $(ssh-agent -s)
-        - ssh-add $PROD_SERVER_SSH_KEY
+        - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
         - ssh $PROD_SERVER echo "Hello world!"

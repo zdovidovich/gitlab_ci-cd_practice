@@ -64,7 +64,8 @@ deploy_dev:
         - if: $CI_COMMIT_BRANCH == "dev"
     image: alpine:3.22.4
     script:
-        - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
+        - chmod 0400 $DEV_SERVER_SSH_KEY && ssh-add $DEV_SERVER_SSH_KEY
+        - ssh-keyscan $DEV_SERVER
         - ssh $DEV_SERVER echo "Hello world!"
 
 deploy_prod:
@@ -76,4 +77,5 @@ deploy_prod:
     image: alpine:3.22.4
     script:
         - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
+        - ssh-keyscan $PROD_SERVER
         - ssh $PROD_SERVER echo "Hello world!"

@@ -49,26 +49,31 @@ scan_image:
     script:
         - trivy image -q --exit-code 1 $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
+.deploy:
+    before_script:
+        - apk add openssh-client-default=10.3p1
+        - eval $(ssh-agent -s)
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+
 deploy_dev:
     stage: deploy_dev
+    extends: .deploy
     needs: [build_image]
     rules:
         - if: $CI_COMMIT_BRANCH == "dev"
     image: alpine:3.22.4
     script:
-        - apk add openssh-client-default=10.3p1
-        - eval $(ssh-agent -s)
         - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
         - ssh $DEV_SERVER echo "Hello world!"
 
 deploy_prod:
     stage: deploy_prod
+    extends: .deploy
     needs: [build_image]
     rules:
         - if: $CI_COMMIT_BRANCH == "main"
     image: alpine:3.22.4
     script:
-        - apk add openssh-client-default=10.0_p1-r10
-        - eval $(ssh-agent -s)
         - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
         - ssh $PROD_SERVER echo "Hello world!"

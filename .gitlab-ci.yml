@@ -82,7 +82,6 @@ deploy_dev:
 deploy_prod:
     stage: deploy_prod
     extends: .deploy
-    needs: [build_image]
     rules:
         - if: $CI_COMMIT_BRANCH == "main"
     image: alpine:3.22.4

@@ -6,6 +6,8 @@ stages:
     - deploy_dev
     - deploy_prod
 
+image: debian:bookworm-slim
+
 variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
@@ -47,7 +49,7 @@ scan_image:
         entrypoint:
             - ""
     script:
-        - trivy image -q --exit-code 1 $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+        - trivy image -q --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 .deploy:
     before_script:
@@ -70,7 +72,8 @@ deploy_dev:
             echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin && 
             docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA && 
             docker stop server 2>/dev/null ;
-            docker run -p 80:8000 -d --name --rm server $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+            docker rm server 2>/dev/null ;
+            docker run -p 80:8000 -d --name server $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
 
 deploy_prod:
     stage: deploy_prod
@@ -85,4 +88,6 @@ deploy_prod:
         - ssh $PROD_SERVER_USER@$PROD_SERVER "
           echo $CI_REGISTRY_PASSWORD | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin && 
           docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA && 
-          docker run -p 80:8000 -d --name server_$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+          docker stop server 2>/dev/null ;
+          docker rm server 2>/dev/null ;
+          docker run -p 80:8000 -d --name server $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"

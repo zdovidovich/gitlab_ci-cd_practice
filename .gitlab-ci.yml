@@ -65,7 +65,6 @@ scan_image:
 deploy_dev:
     stage: deploy_dev
     extends: .deploy
-    needs: [build_image]
     rules:
         - if: $CI_COMMIT_BRANCH == "dev"
     image: alpine:3.22.4
@@ -84,6 +83,7 @@ deploy_prod:
     extends: .deploy
     rules:
         - if: $CI_COMMIT_BRANCH == "main"
+          when: manual
     image: alpine:3.22.4
     script:
         - chmod 0400 $PROD_SERVER_SSH_KEY && ssh-add $PROD_SERVER_SSH_KEY
@@ -93,5 +93,4 @@ deploy_prod:
           docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA && 
           docker stop server 2>/dev/null ;
           docker rm server 2>/dev/null ;
-          docker run -p 80:8000 -d --name server $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
-    when: manual
+          docker run -p 80:8000 -d --name server -v MAIN_BOOKSHELF:/app/data $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
